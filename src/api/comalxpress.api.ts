@@ -1,12 +1,12 @@
 import axios from 'axios';
-import { useAuthStore } from '../store/auth.store';
+import { getAuthToken } from '../store/auth.store';
 
 const comalXpressApi = axios.create({
   baseURL: 'http://192.168.1.3:3000/comal-xpress/api/v1',
 });
 
 comalXpressApi.interceptors.request.use(config => {
-  const token = useAuthStore.getState().token;
+  const token = getAuthToken();
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -16,7 +16,7 @@ comalXpressApi.interceptors.request.use(config => {
 });
 
 comalXpressApi.interceptors.response.use(config => {
-  const token = useAuthStore.getState().token;
+  const token = getAuthToken();
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

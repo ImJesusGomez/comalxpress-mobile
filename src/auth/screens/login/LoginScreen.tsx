@@ -19,14 +19,14 @@ import { useLogin } from '../../hooks/useLogin';
 import { useAuthStore } from '../../../store/auth.store';
 
 export const LoginScreen = () => {
+  const { token, user } = useAuthStore();
+  console.log({ token, user }); // lo ves en Metro/LogBox
+
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
   const [secure, setSecure] = useState(true);
   const loginMutation = useLogin();
-
-  const token = useAuthStore(state => state.token);
-  const user = useAuthStore(state => state.user);
 
   // Use Form
   const { control, handleSubmit } = useForm();

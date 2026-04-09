@@ -9,14 +9,14 @@ export const useLogin = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
-  const setAuth = useAuthStore(state => state.setAuth);
+  const { setAuth } = useAuthStore();
 
   return useMutation({
     mutationKey: ['login'],
     mutationFn: loginAction,
     onSuccess: data => {
       // Guardamos en Zustand
-      setAuth(data.token, data.user);
+      setAuth(data.accessToken, data.user);
       // Navegamos
       navigation.navigate('SignupScreen');
     },
