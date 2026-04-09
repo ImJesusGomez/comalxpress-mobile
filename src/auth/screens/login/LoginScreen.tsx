@@ -14,12 +14,42 @@ import { RootStackParams } from '../../../navigation/RootStackNavigation';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import LinearGradient from 'react-native-linear-gradient';
 import { authStyles } from '../../styles/auth.styles';
+import { useController, useForm } from 'react-hook-form';
+import { useLogin } from '../../hooks/useLogin';
+import { useAuthStore } from '../../../store/auth.store';
 
 export const LoginScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
   const [secure, setSecure] = useState(true);
+  const loginMutation = useLogin();
+
+  const token = useAuthStore(state => state.token);
+  const user = useAuthStore(state => state.user);
+
+  // Use Form
+  const { control, handleSubmit } = useForm();
+
+  const { field: emailField } = useController({
+    control,
+    defaultValue: '',
+    name: 'email',
+  });
+
+  const { field: passwordField } = useController({
+    control,
+    defaultValue: '',
+    name: 'password',
+  });
+
+  const onSubmit = async (data: any) => {
+    try {
+      await loginMutation.mutateAsync(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <LinearGradient
@@ -41,7 +71,13 @@ export const LoginScreen = () => {
 
           {/* Inputs */}
           <Text style={authStyles.headerInput}>Correo Electrónico</Text>
-          <TextInput style={authStyles.input} inputMode="email" />
+          <TextInput
+            style={authStyles.input}
+            inputMode="email"
+            value={emailField.value}
+            onChangeText={emailField.onChange}
+            onBlur={emailField.onBlur}
+          />
 
           <Text style={authStyles.headerInput}>Contraseña</Text>
           <TextInput
@@ -50,6 +86,9 @@ export const LoginScreen = () => {
             autoComplete="password"
             autoCorrect
             autoCapitalize="none"
+            value={passwordField.value}
+            onChangeText={passwordField.onChange}
+            onBlur={passwordField.onBlur}
           />
 
           <Pressable onPress={() => setSecure(!secure)}>
@@ -63,7 +102,7 @@ export const LoginScreen = () => {
           {/* Submit */}
           <Pressable
             style={authStyles.submitButton}
-            onPress={() => console.log('click')}
+            onPress={handleSubmit(onSubmit)}
           >
             <Text style={authStyles.submitText}>Iniciar Sesión</Text>
           </Pressable>
