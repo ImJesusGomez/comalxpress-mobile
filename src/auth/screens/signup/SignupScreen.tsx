@@ -9,14 +9,14 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { RootStackParams } from '../../../navigation/RootStackNavigation';
+import { AuthStackParams } from '../../../navigation/AuthStackNavigation';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import LinearGradient from 'react-native-linear-gradient';
 import { authStyles } from '../../styles/auth.styles';
 
 export const SignupScreen = () => {
   const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParams>>();
+    useNavigation<NativeStackNavigationProp<AuthStackParams>>();
 
   const [secure, setSecure] = useState(true);
 

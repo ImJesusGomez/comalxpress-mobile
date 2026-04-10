@@ -1,24 +1,28 @@
 import { useMutation } from '@tanstack/react-query';
 import { loginAction } from '../actions/login.action';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParams } from '../../navigation/RootStackNavigation';
 import { useAuthStore } from '../../store/auth.store';
+import { ToastMessage } from '../../components/ToastMessage';
 
 export const useLogin = () => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParams>>();
-
   const { setAuth } = useAuthStore();
 
   return useMutation({
     mutationKey: ['login'],
     mutationFn: loginAction,
     onSuccess: data => {
-      // Guardamos en Zustand
-      setAuth(data.accessToken, data.user);
-      // Navegamos
-      navigation.navigate('SignupScreen');
+      setAuth(data.accessToken, data.user); // guarda en estado + storage
+
+      ToastMessage({
+        type: 'success',
+        title: 'Inicio de Sesión exitoso',
+      });
+      // ← sin navigate, RootNavigator redirige solo al detectar el token
     },
+    onError: () =>
+      ToastMessage({
+        type: 'error',
+        title: 'No se pudo iniciar sesión',
+        message: 'Credenciales Inválidas o Incorrectas',
+      }),
   });
 };

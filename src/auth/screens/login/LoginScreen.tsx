@@ -10,7 +10,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { RootStackParams } from '../../../navigation/RootStackNavigation';
+import { AuthStackParams } from '../../../navigation/AuthStackNavigation';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import LinearGradient from 'react-native-linear-gradient';
 import { authStyles } from '../../styles/auth.styles';
@@ -23,7 +23,7 @@ export const LoginScreen = () => {
   console.log({ token, user }); // lo ves en Metro/LogBox
 
   const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParams>>();
+    useNavigation<NativeStackNavigationProp<AuthStackParams>>();
 
   const [secure, setSecure] = useState(true);
   const loginMutation = useLogin();
@@ -45,6 +45,7 @@ export const LoginScreen = () => {
 
   const onSubmit = async (data: any) => {
     try {
+      console.log({ data });
       await loginMutation.mutateAsync(data);
     } catch (error) {
       console.log(error);

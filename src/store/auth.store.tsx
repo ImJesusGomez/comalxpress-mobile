@@ -1,5 +1,8 @@
+// auth.store.tsx
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import { User } from '../interfaces/user.interface';
+import { appStorage } from './app.store';
 
 interface AuthState {
   token: string | null;
@@ -10,27 +13,45 @@ interface AuthState {
 
 const AuthContext = createContext<AuthState | null>(null);
 
-// Variable externa accesible fuera de React
-let currentToken: string | null = null;
-
-export const getAuthToken = () => currentToken;
+const isTokenValid = (token?: string | null): boolean => {
+  if (!token) return false;
+  try {
+    const decoded: any = jwtDecode(token);
+    return decoded.exp > Date.now() / 1000;
+  } catch {
+    return false;
+  }
+};
 
 export const AuthProvider = ({
   children,
 }: {
   children: ReactNode;
 }): React.JSX.Element => {
-  const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(() => {
+    const saved = appStorage.getString('token');
+    return isTokenValid(saved) ? saved! : null;
+  });
+
+  const [user, setUser] = useState<User | null>(() => {
+    try {
+      const saved = appStorage.getString('user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
 
   const setAuth = (newToken: string, newUser: User) => {
-    currentToken = newToken;
+    appStorage.set('token', newToken);
+    appStorage.set('user', JSON.stringify(newUser));
     setToken(newToken);
     setUser(newUser);
   };
 
   const logout = () => {
-    currentToken = null;
+    appStorage.set('token', '');
+    appStorage.set('user', '');
     setToken(null);
     setUser(null);
   };
@@ -48,3 +69,5 @@ export const useAuthStore = () => {
     throw new Error('useAuthStore must be used within AuthProvider');
   return context;
 };
+
+export { isTokenValid };

@@ -2,14 +2,15 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { LoginScreen } from '../auth/screens/login/LoginScreen';
 import { SignupScreen } from '../auth/screens/signup/SignupScreen';
 
-export type RootStackParams = {
+export type AuthStackParams = {
   LoginScreen: undefined;
   SignupScreen: undefined;
+  HomeScreen: undefined;
 };
 
-const Stack = createNativeStackNavigator<RootStackParams>();
+const Stack = createNativeStackNavigator<AuthStackParams>();
 
-export const RootStackNavigation = () => {
+export const AuthStackNavigation = () => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -17,20 +18,8 @@ export const RootStackNavigation = () => {
         animation: 'fade_from_bottom',
       }}
     >
-      <Stack.Screen
-        name="LoginScreen"
-        component={LoginScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="SignupScreen"
-        component={SignupScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
+      <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      <Stack.Screen name="SignupScreen" component={SignupScreen} />
     </Stack.Navigator>
   );
 };
