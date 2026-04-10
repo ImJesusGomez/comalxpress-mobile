@@ -16,12 +16,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import { authStyles } from '../../styles/auth.styles';
 import { useController, useForm } from 'react-hook-form';
 import { useLogin } from '../../hooks/useLogin';
-import { useAuthStore } from '../../../store/auth.store';
 
 export const LoginScreen = () => {
-  const { token, user } = useAuthStore();
-  console.log({ token, user }); // lo ves en Metro/LogBox
-
   const navigation =
     useNavigation<NativeStackNavigationProp<AuthStackParams>>();
 
