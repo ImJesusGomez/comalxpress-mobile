@@ -5,6 +5,10 @@ const comalXpressApi = axios.create({
   baseURL: 'http://192.168.1.8:3000/comal-xpress/api/v1',
 });
 
+// const comalXpressApi = axios.create({
+//   baseURL: 'http://148.220.212.232:3000/comal-xpress/api/v1',
+// });
+
 comalXpressApi.interceptors.request.use(config => {
   const token = appStorage.getString('token');
 
