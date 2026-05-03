@@ -22,7 +22,7 @@ export const LoginScreen = () => {
     useNavigation<NativeStackNavigationProp<AuthStackParams>>();
 
   const [secure, setSecure] = useState(true);
-  const loginMutation = useLogin();
+  const { mutateAsync: loginMutation, isPending } = useLogin();
 
   // Use Form
   const { control, handleSubmit } = useForm();
@@ -42,7 +42,7 @@ export const LoginScreen = () => {
   const onSubmit = async (data: any) => {
     try {
       console.log({ data });
-      await loginMutation.mutateAsync(data);
+      await loginMutation(data);
     } catch (error) {
       console.log(error);
     }
@@ -101,7 +101,9 @@ export const LoginScreen = () => {
             style={authStyles.submitButton}
             onPress={handleSubmit(onSubmit)}
           >
-            <Text style={authStyles.submitText}>Iniciar Sesión</Text>
+            <Text style={authStyles.submitText} disabled={isPending}>
+              {isPending ? 'Iniciando Sesión...' : 'Iniciar Sesión'}
+            </Text>
           </Pressable>
           <Text style={authStyles.helperText}>
             ¿No tienes una cuenta aún?{' '}

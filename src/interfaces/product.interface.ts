@@ -7,5 +7,5 @@ export interface Product {
   basePrice: number;
   image: string;
   isActiva: boolean;
-  productExtras: Extra[];
+  extras: Extra[];
 }

@@ -2,12 +2,17 @@ import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Product } from '../../interfaces/product.interface';
 import Ionicons from '@react-native-vector-icons/ionicons';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { MainStackParams } from '../../navigation/MainStackNavigation';
 
 interface ProductCardProps {
   product: Product;
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<MainStackParams>>();
   return (
     <View style={styles.cardContainer}>
       <Image source={{ uri: product.image }} style={styles.image} />
@@ -16,7 +21,12 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         <Text style={styles.productName}>{product.name}</Text>
       </View>
       <Pressable style={styles.addButton}>
-        <Ionicons name="add-outline" color={'#fff'} size={25} />
+        <Ionicons
+          name="add-outline"
+          color={'#fff'}
+          size={25}
+          onPress={() => navigation.navigate('ProductScreen', { product })}
+        />
       </Pressable>
     </View>
   );
