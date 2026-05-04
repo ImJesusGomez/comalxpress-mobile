@@ -8,27 +8,30 @@ import {
   useAuthStore,
 } from './src/store/auth.store';
 import { MainStackNavigation } from './src/navigation/MainStackNavigation';
+import { OrderProvider } from './src/store/order.store';
 
 // Creamos un cliente
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 export const ComalXpressApp = () => {
   return (
-    <AuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <NavigationContainer>
-          <RootNavigator />
-        </NavigationContainer>
-        <Toast />
-      </QueryClientProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <OrderProvider>
+          <NavigationContainer>
+            <RootNavigator />
+          </NavigationContainer>
+          <Toast />
+        </OrderProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 };
 
 // Componente separado para acceder al contexto
 const RootNavigator = () => {
-  const { token } = useAuthStore(); // ← reacciona a cambios
-  return isTokenValid(token ?? '') ? (
+  const { token } = useAuthStore();
+  return token && isTokenValid(token) ? (
     <MainStackNavigation />
   ) : (
     <AuthStackNavigation />

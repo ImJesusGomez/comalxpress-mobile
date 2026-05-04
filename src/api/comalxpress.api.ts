@@ -2,7 +2,7 @@ import axios from 'axios';
 import { appStorage } from '../store/app.store';
 
 const comalXpressApi = axios.create({
-  baseURL: 'http://192.168.1.2:3000/comal-xpress/api/v1',
+  baseURL: 'http://192.168.1.4:3000/comal-xpress/api/v1',
 });
 
 // const comalXpressApi = axios.create({

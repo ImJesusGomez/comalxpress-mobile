@@ -14,6 +14,8 @@ import {
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
+import { useOrder } from '../../../store/order.store';
+import { ToastMessage } from '../../../components/ToastMessage';
 
 type Props = {
   route: RouteProp<MainStackParams, 'ProductScreen'>;
@@ -28,6 +30,8 @@ export default function ProductScreen({ route }: Props) {
   const [notes, setNotes] = useState('');
 
   const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
+
+  const { addOrder } = useOrder();
 
   const toggleExtra = (id: string) => {
     setSelectedExtras(prev => {
@@ -47,6 +51,20 @@ export default function ProductScreen({ route }: Props) {
     if (quantity <= 1) return;
 
     setQuantity(quantity - 1);
+  };
+
+  const handleAddProduct = () => {
+    addOrder({
+      product: product,
+      quantity: quantity,
+      extras: selectedExtras,
+      notes: notes,
+    });
+
+    ToastMessage({
+      type: 'success',
+      title: 'Producto Agregado exitosamente',
+    });
   };
 
   return (
@@ -81,7 +99,7 @@ export default function ProductScreen({ route }: Props) {
             </View>
           </View>
           <Text style={styles.productDescription}>{product.description}</Text>
-          {product.extras.length !== 0 && (
+          {product.extras?.length > 0 && (
             <View>
               <Text style={styles.extras}>Extras</Text>
               {product.extras?.map(extra => (
@@ -111,7 +129,7 @@ export default function ProductScreen({ route }: Props) {
           />
         </View>
       </KeyboardAvoidingView>
-      <Pressable style={styles.submitButton}>
+      <Pressable style={styles.submitButton} onPress={handleAddProduct}>
         <Text style={styles.submitButtonText}>Agregar Pedido</Text>
       </Pressable>
     </ScrollView>
